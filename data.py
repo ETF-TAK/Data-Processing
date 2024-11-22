@@ -22,7 +22,7 @@ def safe_get(data, key, default=None):
     return value
 
 # ETF 심볼 리스트
-symbols = [ "SHOC", "SPY", "SMCX", "MSTU", "YMAX", "IQQQ", "GLD", "IAU", "462330.KS", "484880.KS" ]
+symbols = [ "SHOC", "SPY", "SMCX", "MSTU", "HIDV", "NVDY", "GLD", "IAU", "462330.KS", "484880.KS" ]
 
 results = []
 
@@ -39,11 +39,12 @@ for symbol in symbols:
     # Nation 매핑
     etf_num = etf.info.get("", "N/A")
     nation_mapping = {1: "US", 0: "KOREA"}
-    nation = nation_mapping[1 if etf_num == "N/A" else 0]
+    #nation = nation_mapping[1 if etf_num == "N/A" else 0]
     
     # ticker 매핑, 한국 ETF data
     ticker_type = safe_get(etf.info, "symbol")
     if ticker_type.endswith(".KS"):
+        nation = nation_mapping[0]
         ticker = None
         etf_num = ticker_type.removesuffix(".KS")
         
@@ -58,10 +59,8 @@ for symbol in symbols:
         company_etf = etf_company.values[0]
         company_name = company_etf.split(" ")[0]
         company = etf_mapping.get(company_name, "Unknown")
-       
-        
-        
     else:
+        nation = nation_mapping[1]
         ticker = ticker_type
         etf_num = None
         nav = safe_get(etf.info, "navPrice", 0.0)
@@ -86,7 +85,7 @@ for symbol in symbols:
         "listingDate": listing_date,
         "equity": safe_get(etf.info, "0", 0),
         "netWorth": netWorth,
-        "dividendRate": safe_get(etf.info, "trailingAnnualDividendRate", 0.0),
+        "dividendRate": etf.info.get("yield", 0),
         "sector": safe_get(etf.info, "sector", "N/A"),
         "category": category,
         "fee": safe_get(etf.info, "expenseRatio", 0),
