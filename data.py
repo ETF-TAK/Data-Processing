@@ -105,16 +105,16 @@ for result in results:
     for key, value in result.items():
         print(f"{key}: {value}")
 
-# # 서버로 데이터 전송
-# url = "http://localhost:8080/save"
+# 서버로 데이터 전송
+url = "http://localhost:8080/save"
 
-# for result in results:
-#     print("전송 데이터:", json.dumps(result, indent=2))
-#     response = requests.post(url, json=result)
-#     if response.status_code == 200:
-#         try:
-#             print("전송 성공:", response.json())
-#         except requests.exceptions.JSONDecodeError:
-#             print("JSON 디코딩 실패. 응답 내용:", response.text)
-#     else:
-#         print("전송 실패:", response.status_code, response.text)
+for result in results:
+    print("전송 데이터:", json.dumps(result, indent=2))
+    response = requests.post(url, json=result)
+    if response.status_code == 200:
+        try:
+            print("전송 성공:", response.json())
+        except requests.exceptions.JSONDecodeError:
+            print("JSON 디코딩 실패. 응답 내용:", response.text)
+    else:
+        print("전송 실패:", response.status_code, response.text)
