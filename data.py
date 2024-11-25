@@ -23,8 +23,50 @@ def safe_get(data, key, default=None):
 
 # ETF 심볼 리스트
 symbols = [ "SHOC", "SPY", "UMDD", "MSTU", "HIDV", "NVDY", "GLD", "IAU", "462330.KS", "484880.KS" ]
+sectors = ["IT", "엔터테인먼트", "2차전지", "금융", "소비재", "반도체", "배당주", "ESG", 
+           "금", "철강", "운송", "조선", "바이오/헬스", "월배당", "에너지/화학", "리츠", 
+           "S&P 500", "나스닥"]
 
 results = []
+
+def determine_sector_updated(row):
+    name = row["name"].lower()
+    if any(keyword in name for keyword in ["it", "technology"]):
+        return "IT"
+    elif any(keyword in name for keyword in ["엔터테인먼트", "entertainment"]):
+        return "엔터테인먼트"
+    elif any(keyword in name for keyword in ["2차전지", "battery"]):
+        return "2차전지"
+    elif any(keyword in name for keyword in ["금융", "finance"]):
+        return "금융"
+    elif any(keyword in name for keyword in ["소비재", "consumer"]):
+        return "소비재"
+    elif any(keyword in name for keyword in ["반도체", "semiconductor"]):
+        return "반도체"
+    elif any(keyword in name for keyword in ["배당주", "dividend"]):
+        return "배당주"
+    elif "ESG" in name:
+        return "ESG"
+    elif any(keyword in name for keyword in ["금", "gold"]):
+        return "금"
+    elif any(keyword in name for keyword in ["철강", "steel"]):
+        return "철강"
+    elif any(keyword in name for keyword in ["운송", "transport"]):
+        return "운송"
+    elif any(keyword in name for keyword in ["조선", "shipbuilding"]):
+        return "조선"
+    elif any(keyword in name for keyword in ["바이오", "헬스", "bio", "health"]):
+        return "바이오/헬스"
+    elif any(keyword in name for keyword in ["월배당", "yield"]):
+        return "월배당"
+    elif any(keyword in name for keyword in ["에너지", "화학", "energy", "chemical"]):
+        return "에너지/화학"
+    elif any(keyword in name for keyword in ["리츠", "reit"]):
+        return "리츠"
+    elif any(keyword in name for keyword in ["S&P", "500"]):
+        return "S&P 500"
+    else:
+        return None
 
 for symbol in symbols:
     etf = yf.Ticker(symbol)
@@ -66,6 +108,9 @@ for symbol in symbols:
         nav = safe_get(etf.info, "navPrice", 0.0)
         netWorth = safe_get(etf.info, "totalAssets", 0)
         company = safe_get(etf.info, "fundFamily", "N/A")
+        
+    etf_name = safe_get(etf.info, "shortName", "Unknown")
+    sector = determine_sector_updated({"name": etf_name})
 
     
     # Category 매핑
@@ -84,7 +129,7 @@ for symbol in symbols:
         "listingDate": listing_date,
         "netWorth": netWorth,
         "dividendRate": etf.info.get("yield", 0),
-        "sector": safe_get(etf.info, "sector", "N/A"),
+        "sector": sector,
         "category": category,
         "fee": safe_get(etf.info, "expenseRatio", 0),
         "price": safe_get(etf.info, "regularMarketOpen", 0),
