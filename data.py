@@ -80,10 +80,8 @@ for symbol in symbols:
     # 데이터 구성
     data = {
         "name": safe_get(etf.info, "shortName", "N/A"),
-        "type": safe_get(etf.info, "quoteType", "N/A"),
         "company": company,
         "listingDate": listing_date,
-        "equity": safe_get(etf.info, "0", 0),
         "netWorth": netWorth,
         "dividendRate": etf.info.get("yield", 0),
         "sector": safe_get(etf.info, "sector", "N/A"),
