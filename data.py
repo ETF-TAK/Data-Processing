@@ -22,7 +22,11 @@ def safe_get(data, key, default=None):
     return value
 
 # ETF 심볼 리스트
-symbols = [ "SHOC", "SPY", "UMDD", "MSTU", "HIDV", "NVDY", "GLD", "IAU", "462330.KS", "484880.KS" ]
+symbols = [ "SHOC", "SPY", "UMDD", "MSTU", "HIDV", "NVDY", "GLD", "IAU", "462330.KS", "484880.KS",
+           "GLDM", "SGOL", "IAUM", "OUNZ", "AAAU", "BAR", "UGL", "DBP", "IGLD", "DGP", "FGDL", "BGLD", "GLL", "DZZ",      # Gold
+           "VGT", "XLK", "SMH", "IYW", "SOXX", "FTEC", "IGV", "CIBR", "IGM", "IXN", "QTEC", "RSPT", "SKYY", "TDIV", "HACK", "FXL", "FTXL", "XSD", "IHAK", "XNTK", "BLOK", "BUG", "PSI", "QQH", "PTF",   # IT
+           "XLY", "XLC", "VCR", "TSLL", "FDIS", "FXD", "IYC", "INCO", "XRT", "RSPD", "ESPO", "PEJ", "RXI", "RTH", "CHIQ", "PEZ"
+           ]
 sectors = ["IT", "엔터테인먼트", "2차전지", "금융", "소비재", "반도체", "배당주", "ESG", 
            "금", "철강", "운송", "조선", "바이오/헬스", "월배당", "에너지/화학", "리츠", 
            "S&P 500", "나스닥"]
@@ -31,7 +35,12 @@ results = []
 
 def determine_sector_updated(row):
     name = row["name"].lower()
-    if any(keyword in name for keyword in ["it", "technology"]):
+    
+    def contains_exact_word(text, keywords):
+        pattern = r'\b(?:' + '|'.join(re.escape(keyword) for keyword in keywords) + r')\b'
+        return re.search(pattern, text) is not None
+    
+    if any(keyword in name for keyword in ["it", "technology", "tech"]):
         return "IT"
     elif any(keyword in name for keyword in ["엔터테인먼트", "entertainment"]):
         return "엔터테인먼트"
@@ -47,7 +56,7 @@ def determine_sector_updated(row):
         return "배당주"
     elif "ESG" in name:
         return "ESG"
-    elif any(keyword in name for keyword in ["금", "gold"]):
+    elif any(keyword in name for keyword in ["금", "gold", "metals"]):
         return "금"
     elif any(keyword in name for keyword in ["철강", "steel"]):
         return "철강"
@@ -109,7 +118,7 @@ for symbol in symbols:
         netWorth = safe_get(etf.info, "totalAssets", 0)
         company = safe_get(etf.info, "fundFamily", "N/A")
         
-    etf_name = safe_get(etf.info, "shortName", "Unknown")
+    etf_name = safe_get(etf.info, "longName", "Unknown")
     sector = determine_sector_updated({"name": etf_name})
 
     
@@ -124,7 +133,7 @@ for symbol in symbols:
 
     # 데이터 구성
     data = {
-        "name": safe_get(etf.info, "shortName", "N/A"),
+        "name": safe_get(etf.info, "longName", "N/A"),
         "company": company,
         "listingDate": listing_date,
         "netWorth": netWorth,
