@@ -12,7 +12,7 @@ etf_mapping = {
     "SOL": "신한자산운용",
     "ARIRANG": "한화자산운용",
     "HANARO": "NH-Amundi자산운용",
-    "KOSEF": "키움자산운용"
+    "KOSEF": "키움자산운용",
 }
 
 def safe_get(data, key, default=None):
@@ -26,13 +26,18 @@ def load_symbols_from_file(filepath):
         content = file.read()
         return [symbol.strip() for symbol in content.split(",") if symbol.strip()]
 
-file_path = "./ticker.txt"
+file_path = "./test.txt"
 # ETF ticker 리스트
 symbols = load_symbols_from_file(file_path)
 
 sectors = ["IT", "엔터테인먼트", "2차전지", "금융", "소비재", "반도체", "배당주", "ESG", 
            "금", "철강", "운송", "조선", "바이오/헬스", "월배당", "에너지/화학", "리츠", 
            "S&P 500", "나스닥"]
+
+it = ["technology", "tech", "qqq", "nasdaq", "innovation", "internet", 
+      "nvda", "robotics", "software", "cloud", "aapl", "printing", "msfu", 
+      "intelligence", "hcm", "digital", "software", "sw",
+      "microsoft", "google", "apple", "samsung", "metaverse", "robot", "automous", "infra"]
 
 results = []
 
@@ -41,15 +46,15 @@ def determine_sector_updated(row):
     
     if any(keyword in name for keyword in ["바이오", "헬스", "bio", "health", 'medical', 'genomic', 'pharmaceutical', 'psychedelics', 'cannabis', 'oncology', 'cancer', 'obesity', 'aging', 'alpha architect']):
         return "바이오/헬스"
-    elif any(keyword in name for keyword in ["엔터테인먼트", "entertainment"]):
+    elif any(keyword in name for keyword in ["엔터테인먼트", "entertainment", "media"]):
         return "엔터테인먼트"
-    elif any(keyword in name for keyword in ["2차전지", "battery"]):
+    elif any(keyword in name for keyword in ["2차전지", "battery", "cell"]):
         return "2차전지"
-    elif any(keyword in name for keyword in ["금융", "finance", "financial", "bank", "credit", "fund", "crypt", "blockchain", "bitcoin", "coin"]):
+    elif any(keyword in name for keyword in ["금융", "finance", "financial", "bank", "credit", "fund", "crypt", "blockchain", "bitcoin", "coin", "bond", "rate", "money", "cash", "futures", "dollar" ]):
         return "금융"
     elif any(keyword in name for keyword in ["소비재", "consumer", "retail"]):
         return "소비재"
-    elif any(keyword in name for keyword in ["반도체", "semiconductor"]):
+    elif any(keyword in name for keyword in ["반도체", "tsmc", "semiconductor", "semicon", "nvidia", "hardware", "ai"]):
         return "반도체"
     elif "esg" in name:
         return "ESG"
@@ -59,13 +64,13 @@ def determine_sector_updated(row):
         return "금"
     elif any(keyword in name for keyword in ["철강", "steel"]):
         return "철강"
-    elif any(keyword in name for keyword in ["운송", "transport"]):
+    elif any(keyword in name for keyword in ["운송", "transport", "vehicles", "motor"]):
         return "운송"
     elif any(keyword in name for keyword in ["조선", "shipbuilding", 'shipping', 'sea']):
         return "조선"
-    elif any(keyword in name for keyword in ["리츠", "reit", "estate"]):
+    elif any(keyword in name for keyword in ["리츠", "reit", "estate", "ship"]):
         return "리츠"
-    elif any(keyword in name for keyword in ["technology", "tech", "qqq", "nasdaq", "innovation", "internet", "nvda", "robotics", "software", "cloud", "aapl", "printing", "msfu", "intelligence", "hcm"]):
+    elif any(keyword in name for keyword in it):
         return "IT"
     elif any(keyword in name for keyword in ["S&P", "500"]):
         return "S&P 500"
