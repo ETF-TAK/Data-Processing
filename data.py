@@ -45,13 +45,13 @@ def determine_sector_updated(row):
         return "엔터테인먼트"
     elif any(keyword in name for keyword in ["2차전지", "battery"]):
         return "2차전지"
-    elif any(keyword in name for keyword in ["금융", "finance", "financial", "bank", "credit", "fund"]):
+    elif any(keyword in name for keyword in ["금융", "finance", "financial", "bank", "credit", "fund", "crypt", "blockchain", "bitcoin", "coin"]):
         return "금융"
     elif any(keyword in name for keyword in ["소비재", "consumer", "retail"]):
         return "소비재"
     elif any(keyword in name for keyword in ["반도체", "semiconductor"]):
         return "반도체"
-    elif "ESG" in name:
+    elif "esg" in name:
         return "ESG"
     elif any(keyword in name for keyword in ["에너지", "화학", "energy", "chemical", 'mlp', 'solar', 'oil', 'gas', 'lng', 'climate paris aligned', 'h2', 'hydrogen', 'cleantech', 'pipeline', 'uranium', 'nuclear', 'carbon', 'clean power', 'sustainable future', 'transform system']):
         return "에너지/화학"
@@ -61,12 +61,14 @@ def determine_sector_updated(row):
         return "철강"
     elif any(keyword in name for keyword in ["운송", "transport"]):
         return "운송"
-    elif any(keyword in name for keyword in ["조선", "shipbuilding"]):
+    elif any(keyword in name for keyword in ["조선", "shipbuilding", 'shipping', 'sea']):
         return "조선"
     elif any(keyword in name for keyword in ["리츠", "reit", "estate"]):
         return "리츠"
-    elif any(keyword in name for keyword in ["technology", "tech", "qqq", "nasdaq", "innovation", "internet", "nvda", "robotics", "software"]):
+    elif any(keyword in name for keyword in ["technology", "tech", "qqq", "nasdaq", "innovation", "internet", "nvda", "robotics", "software", "cloud", "aapl", "printing", "msfu", "intelligence", "hcm"]):
         return "IT"
+    elif any(keyword in name for keyword in ["S&P", "500"]):
+        return "S&P 500"
     else:
         return None
 
