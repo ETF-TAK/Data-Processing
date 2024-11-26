@@ -21,12 +21,15 @@ def safe_get(data, key, default=None):
         return default
     return value
 
-# ETF 심볼 리스트
-symbols = [ "SHOC", "SPY", "UMDD", "MSTU", "HIDV", "NVDY", "GLD", "IAU", "462330.KS", "484880.KS",
-           "GLDM", "SGOL", "IAUM", "OUNZ", "AAAU", "BAR", "UGL", "DBP", "IGLD", "DGP", "FGDL", "BGLD", "GLL", "DZZ",      # Gold
-           "VGT", "XLK", "SMH", "IYW", "SOXX", "FTEC", "IGV", "CIBR", "IGM", "IXN", "QTEC", "RSPT", "SKYY", "TDIV", "HACK", "FXL", "FTXL", "XSD", "IHAK", "XNTK", "BLOK", "BUG", "PSI", "QQH", "PTF",   # IT
-           "XLY", "XLC", "VCR", "TSLL", "FDIS", "FXD", "IYC", "INCO", "XRT", "RSPD", "ESPO", "PEJ", "RXI", "RTH", "CHIQ", "PEZ"
-           ]
+def load_symbols_from_file(filepath):
+    with open(filepath, "r") as file:
+        content = file.read()
+        return [symbol.strip() for symbol in content.split(",") if symbol.strip()]
+
+file_path = "./ticker.txt"
+# ETF ticker 리스트
+symbols = load_symbols_from_file(file_path)
+
 sectors = ["IT", "엔터테인먼트", "2차전지", "금융", "소비재", "반도체", "배당주", "ESG", 
            "금", "철강", "운송", "조선", "바이오/헬스", "월배당", "에너지/화학", "리츠", 
            "S&P 500", "나스닥"]
@@ -36,26 +39,22 @@ results = []
 def determine_sector_updated(row):
     name = row["name"].lower()
     
-    def contains_exact_word(text, keywords):
-        pattern = r'\b(?:' + '|'.join(re.escape(keyword) for keyword in keywords) + r')\b'
-        return re.search(pattern, text) is not None
-    
-    if any(keyword in name for keyword in ["it", "technology", "tech"]):
-        return "IT"
+    if any(keyword in name for keyword in ["바이오", "헬스", "bio", "health", 'medical', 'genomic', 'pharmaceutical', 'psychedelics', 'cannabis', 'oncology', 'cancer', 'obesity', 'aging', 'alpha architect']):
+        return "바이오/헬스"
     elif any(keyword in name for keyword in ["엔터테인먼트", "entertainment"]):
         return "엔터테인먼트"
     elif any(keyword in name for keyword in ["2차전지", "battery"]):
         return "2차전지"
-    elif any(keyword in name for keyword in ["금융", "finance"]):
+    elif any(keyword in name for keyword in ["금융", "finance", "financial", "bank", "credit", "fund"]):
         return "금융"
-    elif any(keyword in name for keyword in ["소비재", "consumer"]):
+    elif any(keyword in name for keyword in ["소비재", "consumer", "retail"]):
         return "소비재"
     elif any(keyword in name for keyword in ["반도체", "semiconductor"]):
         return "반도체"
-    elif any(keyword in name for keyword in ["배당주", "dividend"]):
-        return "배당주"
     elif "ESG" in name:
         return "ESG"
+    elif any(keyword in name for keyword in ["에너지", "화학", "energy", "chemical", 'mlp', 'solar', 'oil', 'gas', 'lng', 'climate paris aligned', 'h2', 'hydrogen', 'cleantech', 'pipeline', 'uranium', 'nuclear', 'carbon', 'clean power', 'sustainable future', 'transform system']):
+        return "에너지/화학"
     elif any(keyword in name for keyword in ["금", "gold", "metals"]):
         return "금"
     elif any(keyword in name for keyword in ["철강", "steel"]):
@@ -64,16 +63,10 @@ def determine_sector_updated(row):
         return "운송"
     elif any(keyword in name for keyword in ["조선", "shipbuilding"]):
         return "조선"
-    elif any(keyword in name for keyword in ["바이오", "헬스", "bio", "health"]):
-        return "바이오/헬스"
-    elif any(keyword in name for keyword in ["월배당", "yield"]):
-        return "월배당"
-    elif any(keyword in name for keyword in ["에너지", "화학", "energy", "chemical"]):
-        return "에너지/화학"
-    elif any(keyword in name for keyword in ["리츠", "reit"]):
+    elif any(keyword in name for keyword in ["리츠", "reit", "estate"]):
         return "리츠"
-    elif any(keyword in name for keyword in ["S&P", "500"]):
-        return "S&P 500"
+    elif any(keyword in name for keyword in ["technology", "tech", "qqq", "nasdaq", "innovation", "internet", "nvda", "robotics", "software"]):
+        return "IT"
     else:
         return None
 
