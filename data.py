@@ -73,6 +73,8 @@ def determine_sector_updated(row):
         return "리츠"
     elif any(keyword in name for keyword in it):
         return "IT"
+    elif any(keyword in name for keyword in ["kosdaq", "msci", "200", "150", "dow"]):
+        return "지수"
     elif any(keyword in name for keyword in ["S&P", "500"]):
         return "S&P 500"
     else:
