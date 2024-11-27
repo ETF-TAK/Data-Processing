@@ -4,6 +4,7 @@ import datetime
 import requests
 import json
 
+# etf mapping 
 etf_mapping = {
     "KODEX": "삼성자산운용",
     "TIGER": "미래에셋자산운용",
