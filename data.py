@@ -7,13 +7,15 @@ import json
 # etf mapping company
 etf_mapping = {
     "KODEX": "삼성자산운용",
+    "SAMAUNG": "삼성자산운용",
     "TIGER": "미래에셋자산운용",
     "RISE": "KB자산운용",
     "ACE": "한국투자신탁운용",
     "SOL": "신한자산운용",
-    "ARIRANG": "한화자산운용",
+    "PLUS": "한화자산운용",
     "HANARO": "NH-Amundi자산운용",
     "KOSEF": "키움자산운용",
+    "WON": "우리자산운용",
 }
 
 def safe_get(data, key, default=None):
@@ -28,6 +30,7 @@ def load_symbols_from_file(filepath):
         return [symbol.strip() for symbol in content.split(",") if symbol.strip()]
 
 file_path = "./korea_etf.txt"
+# file_path = "./ticker.txt"
 # ETF ticker 리스트
 symbols = load_symbols_from_file(file_path)
 
@@ -115,7 +118,7 @@ for symbol in symbols:
         # company_etf = etf_company.values[0]
         company_etf = etf_company.values[0] if not etf_company.empty else None
         # company_name = company_etf.split(" ")[0]
-        company_name = company_etf.split(" ")[0] if company_etf else "Unknown"
+        company_name = company_etf.split(" ")[0].upper() if company_etf else "UNKNOWN"
         company = etf_mapping.get(company_name, "Unknown")
     else:
         nation = nation_mapping[1]
@@ -159,10 +162,10 @@ for symbol in symbols:
     results.append(data)
 
 # 결과 출력
-for result in results:
-    print("\n=== ETF 데이터 ===")
-    for key, value in result.items():
-        print(f"{key}: {value}")
+# for result in results:
+#     print("\n=== ETF 데이터 ===")
+#     for key, value in result.items():
+#         print(f"{key}: {value}")
 
 # 서버로 데이터 전송
 url = "http://localhost:8080/save"
