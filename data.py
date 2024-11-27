@@ -26,7 +26,7 @@ def load_symbols_from_file(filepath):
         content = file.read()
         return [symbol.strip() for symbol in content.split(",") if symbol.strip()]
 
-file_path = "./test.txt"
+file_path = "./korea_etf.txt"
 # ETF ticker 리스트
 symbols = load_symbols_from_file(file_path)
 
@@ -105,10 +105,14 @@ for symbol in symbols:
         etf_nav = df.loc[df['itemcode'] == etf_num, 'nav']
         etf_aum = df.loc[df['itemcode'] == etf_num, 'marketSum']
         etf_company = df.loc[df['itemcode'] == etf_num, 'itemname']
-        nav = etf_nav.values[0]
-        netWorth = int(etf_aum.values[0])
-        company_etf = etf_company.values[0]
-        company_name = company_etf.split(" ")[0]
+        # nav = etf_nav.values[0]
+        nav = etf_nav.values[0] if not etf_nav.empty else None
+            # netWorth = int(etf_aum.values[0])
+        netWorth = int(etf_aum.values[0]) if not etf_aum.empty else None
+        # company_etf = etf_company.values[0]
+        company_etf = etf_company.values[0] if not etf_company.empty else None
+        # company_name = company_etf.split(" ")[0]
+        company_name = company_etf.split(" ")[0] if company_etf else "Unknown"
         company = etf_mapping.get(company_name, "Unknown")
     else:
         nation = nation_mapping[1]
