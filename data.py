@@ -43,6 +43,10 @@ it = ["technology", "tech", "qqq", "nasdaq", "innovation", "internet",
       "intelligence", "hcm", "digital", "software", "sw",
       "microsoft", "google", "apple", "samsung", "metaverse", "robot", "automous", "infra"]
 
+growth = ["바이오", "헬스", "bio", "health", 'medical', 'genomic', 'pharmaceutical', 'psychedelics', 'cannabis', 'oncology', 'cancer', 'obesity', 'aging', 'alpha architect',
+          "2차전지", "battery", "cell", "반도체", "tsmc", "semiconductor", "semicon", "nvidia", "hardware", "ai", "에너지", "화학", "energy", "chemical", 'mlp', 'solar', 'oil', 'gas', 'lng', 'climate paris aligned', 'h2', 'hydrogen', 'cleantech', 'pipeline', 'uranium', 'nuclear', 'carbon', 'clean power', 'sustainable future', 'transform system',
+          "technology", "tech", "qqq", "nasdaq", "innovation", "internet", "nvda", "robotics", "software", "cloud", "aapl", "printing", "msfu", "intelligence", "hcm", "digital", "software", "sw", "microsoft", "google", "apple", "samsung", "metaverse", "robot", "automous", "infra"]
+
 results = []
 
 def determine_sector_updated(row):
@@ -139,8 +143,22 @@ for symbol in symbols:
         "DIVIDEND": "DIVIDEND",
         "GOLD": "GOLD"
     }
-    category = category_mapping.get("GOLD", "GOLD")
-
+    def determine_category_updated(row):
+        name = row["name"].lower()
+        if any(keyword in name for keyword in ["everage", "2X", "3X"]):
+            return "LEVERAGE"
+        elif any(keyword in name for keyword in ["gold"]):
+            return "GOLD"
+        elif any(keyword in name for keyword in ["dividend"]):
+            return "DIVIDEND"
+        elif any(keyword in name for keyword in growth):
+            return "GROWTH"
+        else:
+            return None
+        
+    # category = category_mapping.get("GOLD", "GOLD")
+    category = determine_category_updated({"name": etf_name})
+    
     # 데이터 구성
     data = {
         "name": safe_get(etf.info, "longName", "N/A"),
