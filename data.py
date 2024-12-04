@@ -112,6 +112,11 @@ for symbol in symbols:
         url = 'https://finance.naver.com/api/sise/etfItemList.nhn'
         json_data = json.loads(requests.get(url).text)
         df = pd.json_normalize(json_data['result']['etfItemList'])
+        if not df.loc[df['itemcode'] == etf_num, 'itemname'].empty:
+            name = df.loc[df['itemcode'] == etf_num, 'itemname'].values[0]
+        else:
+            name = safe_get(etf.info, "longName", "N/A")
+
         etf_nav = df.loc[df['itemcode'] == etf_num, 'nav']
         etf_aum = df.loc[df['itemcode'] == etf_num, 'marketSum']
         etf_company = df.loc[df['itemcode'] == etf_num, 'itemname']
@@ -128,6 +133,7 @@ for symbol in symbols:
         nation = nation_mapping[1]
         ticker = ticker_type
         etf_num = None
+        name = safe_get(etf.info, "longName", "N/A")
         nav = safe_get(etf.info, "navPrice", 0.0)
         netWorth = safe_get(etf.info, "totalAssets", 0)
         company = safe_get(etf.info, "fundFamily", "N/A")
@@ -161,7 +167,7 @@ for symbol in symbols:
     
     # 데이터 구성
     data = {
-        "name": safe_get(etf.info, "longName", "N/A"),
+        "name": name,
         "company": company,
         "listingDate": listing_date,
         "netWorth": netWorth,

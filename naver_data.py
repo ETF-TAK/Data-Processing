@@ -13,3 +13,6 @@ print(df.shape)
 # itemcodes = [code + '.KS' for code in df['itemcode'].tolist()]
 
 # print(','.join(itemcodes))
+
+print(df)
+print(df.dtypes)
