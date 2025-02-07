@@ -93,7 +93,7 @@ for symbol in symbols:
     # 상장일 처리
     fund_inception_date = etf.info.get("fundInceptionDate", None)
     if fund_inception_date and isinstance(fund_inception_date, (int, float)):
-        listing_date = datetime.datetime.utcfromtimestamp(fund_inception_date).isoformat()
+        listing_date = datetime.datetime.fromtimestamp(fund_inception_date, datetime.UTC).isoformat()
     else:
         listing_date = None
     
